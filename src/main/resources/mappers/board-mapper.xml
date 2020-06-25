@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Board">
+
+	<insert id="insert">  
+		insert into board values(board_seq.nextval,#{writer},default,default,#{title},#{category},#{id},#{contents},#{ip_address})
+	</insert>
+
+	<delete id="delete">
+		delete from board where seq= #{value}
+	</delete>
+
+	<update id="viewUp">
+		update board set view_count=view_count+1 where seq = #{value}
+	</update>
+
+	<select id="select" resultType="kh.spring.dto.BoardDTO">
+		select * from board 
+		<if test = "seq != null">
+		where seq = #{seq} 
+		</if>
+	</select>
+	
+	<select id="selectAll" resultType="kh.spring.dto.BoardDTO">
+		select * from board
+	</select>
+	
+	<select id="selectAllDesc" resultType="kh.spring.dto.BoardDTO">
+		select * from board order by 1 desc
+	</select>
+	
+	<select id="selectByPageNo" resultType="kh.spring.dto.BoardDTO">
+		select * from (select board.*, row_number() over(order by seq desc) as rnum from board) where rnum between #{start} and #{end}
+	</select>
+	
+	
+	<select id="selectCount" resultType="int">
+		select count(*) from board
+	</select>
+	
+</mapper>
